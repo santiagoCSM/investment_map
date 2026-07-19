@@ -62,7 +62,7 @@ func (a *Adapter) Query(ctx context.Context, symbol string, rng domain.HistoryRa
 		return nil, fmt.Errorf("mongo: query %s: %w", symbol, err)
 	}
 
-	cutoff, hasCutoff := rangeCutoff(rng)
+	cutoff, hasCutoff := rangeCutoff(rng, time.Now().UTC())
 	points := make([]domain.HistoryPoint, 0, len(doc.Points))
 	for _, p := range doc.Points {
 		if hasCutoff && p.Date.Before(cutoff) {
@@ -73,8 +73,9 @@ func (a *Adapter) Query(ctx context.Context, symbol string, rng domain.HistoryRa
 	return points, nil
 }
 
-func rangeCutoff(rng domain.HistoryRange) (time.Time, bool) {
-	now := time.Now().UTC()
+// rangeCutoff takes `now` as a parameter (rather than calling time.Now()
+// itself) purely so it's deterministically testable.
+func rangeCutoff(rng domain.HistoryRange, now time.Time) (time.Time, bool) {
 	switch rng {
 	case domain.HistoryRange1Month:
 		return now.AddDate(0, -1, 0), true
