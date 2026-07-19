@@ -69,7 +69,7 @@ func main() {
 		close(managerDone)
 	}()
 
-	query := app.NewQueryService(cache, allSymbols)
+	query := app.NewQueryService(cache, store, allSymbols)
 	router := inboundhttp.NewRouter(query)
 	server := &http.Server{Addr: cfg.HTTPAddr, Handler: router}
 
