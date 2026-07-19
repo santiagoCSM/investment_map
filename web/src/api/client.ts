@@ -1,4 +1,5 @@
-import type { Quote } from '../types/quote'
+import type { HistoryPoint, Quote } from '../types/quote'
+import type { Symbol } from '../types/symbol'
 
 // Same-origin in prod (backend serves the built frontend), proxied by Vite
 // in dev (see vite.config.ts) — so this never needs an absolute URL or CORS
@@ -30,4 +31,15 @@ export function fetchQuotes(): Promise<Quote[]> {
 
 export function fetchQuote(symbol: string): Promise<Quote> {
   return getJSON<Quote>(`/quotes/${encodeURIComponent(symbol)}`)
+}
+
+export type HistoryRange = '1mo' | '3mo' | '1y' | 'max'
+
+export function fetchHistory(symbol: string, range?: HistoryRange): Promise<HistoryPoint[]> {
+  const query = range ? `?range=${range}` : ''
+  return getJSON<HistoryPoint[]>(`/history/${encodeURIComponent(symbol)}${query}`)
+}
+
+export function fetchSymbols(): Promise<Symbol[]> {
+  return getJSON<Symbol[]>('/symbols')
 }
