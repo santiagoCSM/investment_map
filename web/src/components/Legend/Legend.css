@@ -1,0 +1,52 @@
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: #ccc;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.legend__gradient {
+  display: flex;
+  width: 220px;
+  height: 12px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.legend__swatch {
+  flex: 1;
+}
+
+.legend__labels {
+  display: flex;
+  justify-content: space-between;
+  width: 220px;
+  color: #999;
+}
+
+.legend__note {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #999;
+  margin-top: 0.25rem;
+}
+
+.legend__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.legend__opacity-sample {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  background: #4caf50;
+  opacity: 0.6;
+  margin-left: 0.75rem;
+}
