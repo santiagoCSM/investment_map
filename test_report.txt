@@ -1,0 +1,134 @@
+INVESTMENT MAP - BACKEND TEST REPORT
+=====================================
+Generated: 2026-07-19
+Command:   go test ./... -v
+Result:    PASS (0 failures)
+
+SUMMARY
+-------
+Packages with tests : 4
+Test functions       : 15
+Total assertions      : 35 (including table-driven subtests)
+Failures              : 0
+Total runtime          : ~3.4s
+
+All tests are hermetic (no Redis, Mongo, or live Yahoo Finance calls
+required) — they run against in-memory fakes of the LiveCache and
+HistoryStore ports, so `go test ./...` passes in any environment,
+including CI, with zero external setup.
+
+PACKAGE RESULTS
+----------------
+
+1) internal/adapters/inbound/http   (ok, 1.192s)
+   Covers the 4 REST endpoints end-to-end through the real router and
+   handlers, backed by fake ports instead of real Redis/Mongo.
+
+   PASS TestHealthEndpoint
+        GET /healthz returns 200.
+
+   PASS TestListQuotesEndpoint
+        GET /api/quotes returns 200 with the expected quote array.
+
+   PASS TestGetQuoteEndpoint
+        PASS  tracked_symbol      GET /api/quotes/^GSPC -> 200
+        PASS  untracked_symbol    GET /api/quotes/FAKE  -> 404
+
+   PASS TestGetHistoryEndpoint
+        PASS  default_range        GET /api/history/^GSPC             -> 200
+        PASS  explicit_1mo         GET /api/history/^GSPC?range=1mo   -> 200
+        PASS  explicit_3mo         GET /api/history/^GSPC?range=3mo   -> 200
+        PASS  explicit_1y          GET /api/history/^GSPC?range=1y    -> 200
+        PASS  explicit_max         GET /api/history/^GSPC?range=max   -> 200
+        PASS  invalid_range        GET /api/history/^GSPC?range=bogus -> 400
+        PASS  untracked_symbol     GET /api/history/FAKE              -> 404
+
+   PASS TestGetHistoryEndpoint_HappyPathReturnsPoints
+        Response body decodes to the expected history points.
+
+   PASS TestGetHistoryEndpoint_NoHistoryYet_ReturnsEmptyArrayNotNull
+        Regression guard: a symbol with zero stored points must
+        serialize as `[]`, never `null` (a nil slice would break
+        frontend code that iterates the response as an array).
+
+2) internal/adapters/outbound/mongo   (ok, 0.737s)
+   Pure-logic tests for the date-window filtering used by the history
+   store's Query() method.
+
+   PASS TestRangeCutoff
+        PASS  1_month                    now - 1mo, cutoff present
+        PASS  3_months                   now - 3mo, cutoff present
+        PASS  1_year                     now - 1y,  cutoff present
+        PASS  max_has_no_cutoff          "max" returns no cutoff (all points)
+        PASS  unknown_range_has_no_cutoff  unrecognized range is treated as "no cutoff"
+
+   PASS TestTruncateToDay
+        Confirms timestamps are normalized to midnight UTC before
+        being used as the per-day dedupe key in Append().
+
+3) internal/adapters/outbound/yahoo   (ok, 0.504s)
+   Regression test for a real bug found and fixed this session: Yahoo's
+   v8/finance/chart endpoint silently coarsens interval=1d data to
+   quarterly bars once range=max spans decades (confirmed live: 168
+   points for ^GSPC back to 1985 with ~90-day gaps, vs. 2514 points with
+   real 1-day gaps for range=10y). The backfill now requests "10y" from
+   Yahoo instead of "max" — this test fails loudly if that mapping is
+   ever "simplified" back to max.
+
+   PASS TestToYahooRange
+        PASS  1_month                    "1mo" -> "1mo"
+        PASS  3_months                   "3mo" -> "3mo"
+        PASS  1_year                     "1y"  -> "1y"
+        PASS  max                        "max" -> "max"
+        PASS  10_year_(backfill_range)   "10y" -> "10y"
+        PASS  unsupported                unknown range -> error
+
+4) internal/app   (ok, 0.949s)
+   Unit tests for QueryService, the use case backing all 3 read
+   endpoints, against fake LiveCache/HistoryStore ports.
+
+   PASS TestListQuotes_ReturnsAllTrackedQuotes
+   PASS TestGetQuote_TrackedSymbol_ReturnsQuote
+   PASS TestGetQuote_UntrackedSymbol_ReturnsError
+   PASS TestGetHistory_TrackedSymbol_ReturnsPoints
+   PASS TestGetHistory_UntrackedSymbol_ReturnsError
+   PASS TestGetHistory_NoPointsYet_ReturnsEmptySliceNotNil
+        Same null-vs-empty-array regression guard as the HTTP-level
+        test above, at the layer where the fix actually lives.
+
+PACKAGES WITH NO TESTS (INFORMATIONAL, NOT FAILURES)
+------------------------------------------------------
+cmd/server, cmd/yahoo_smoketest, cmd/store_smoketest,
+cmd/market_status_smoketest  - manual/throwaway entrypoints, exercised
+                                by running them directly (see README/
+                                Makefile targets), not unit-tested.
+config                       - thin env-var loading, no branching logic
+                                worth a dedicated test yet.
+internal/adapters/outbound/redis - LiveCache adapter; only real coverage
+                                so far is the manual store_smoketest
+                                against a live Redis container. Same
+                                gap as Mongo's Append/Query (both need
+                                a live database or a driver-level test
+                                harness to unit test directly) - Query's
+                                pure date-filtering logic is covered
+                                separately in mongo/history_store_test.go.
+internal/domain, internal/ports, internal/workers,
+pkg/httpclient, pkg/logger   - no dedicated unit tests yet.
+                                internal/domain/market_status.go's
+                                ComputeMarketState is covered instead by
+                                cmd/market_status_smoketest (11 hand-built
+                                edge cases against real exchange data,
+                                run manually via `make smoketest-market-status`,
+                                not part of `go test ./...`).
+
+WHAT THIS SUITE DOES NOT COVER (KNOWN GAPS)
+---------------------------------------------
+- No live-infrastructure integration tests (real Redis/Mongo/Yahoo) run
+  as part of `go test ./...` — that coverage exists only as the manual
+  cmd/*_smoketest commands, which require Docker containers running and
+  are not part of CI-style automated testing yet.
+- Worker scheduling/graceful-shutdown behavior (internal/workers) has no
+  automated tests — verified manually this session via SIGTERM tests
+  against the running binary, not via `go test`.
+- ComputeMarketState (market open/closed logic) has no `go test` unit
+  tests, only the manual smoketest binary mentioned above.
