@@ -1,0 +1,38 @@
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: system-ui, sans-serif;
+}
+
+.status {
+  text-align: center;
+  margin-top: 4rem;
+  font-family: system-ui, sans-serif;
+  color: #666;
+}
+
+.status--error {
+  color: #c0392b;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.positive {
+  color: #1e8e3e;
+}
+
+.negative {
+  color: #c0392b;
+}
