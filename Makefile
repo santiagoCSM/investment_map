@@ -1,6 +1,6 @@
 BINARY := bin/server
 
-.PHONY: run build docker-up docker-down smoketest-yahoo smoketest-store smoketest-market-status fmt vet
+.PHONY: run build docker-up docker-down smoketest-yahoo smoketest-store smoketest-market-status test fmt vet
 
 # `go run` only forwards SIGINT/SIGQUIT to its child process, never SIGTERM,
 # and always leaves an intermediary process in between. That combination
@@ -28,6 +28,9 @@ smoketest-store:
 
 smoketest-market-status:
 	go run ./cmd/market_status_smoketest
+
+test:
+	go test ./...
 
 fmt:
 	gofmt -l -w .
