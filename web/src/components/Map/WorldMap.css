@@ -1,0 +1,43 @@
+.world-map {
+  position: relative;
+  width: 100%;
+  --map-no-data: #2a2f3a;
+}
+
+.world-map svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--map-ocean, #12151c);
+  border-radius: 8px;
+}
+
+.country {
+  stroke: #0d0f14;
+  stroke-width: 0.5;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.country:hover {
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+.map-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: rgba(20, 22, 28, 0.95);
+  color: #eee;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.map-tooltip .muted {
+  color: #999;
+}
