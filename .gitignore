@@ -4,11 +4,27 @@
 *.test
 *.out
 
+# Node / React (frontend)
+node_modules/
+dist/
+dist-ssr/
+build/
+.vite/
+*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
 # Env / secrets
 .env
 .env.*
+!.env.example
 
 # Editor
 .vscode/
 .idea/
 .DS_Store
+
+# Local tooling config (not part of the project)
+.claude/
