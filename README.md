@@ -11,6 +11,8 @@ consuming its REST API. It is not intended to be monetized or operated as a
 product — the priority throughout has been clean, well-architected,
 testable code over feature breadth.
 
+![World map choropleth showing live market status, colored by daily percentage change](docs/screenshot.png)
+
 ## Table of contents
 
 - [Goals and scope](#goals-and-scope)
@@ -264,6 +266,7 @@ time-sensitive the way live quotes are.
 | `GET /api/quotes` | Every tracked symbol's current cached quote |
 | `GET /api/quotes/{symbol}` | A single symbol's current quote (404 if not tracked) |
 | `GET /api/history/{symbol}?range=1mo\|3mo\|1y\|max` | Daily-close series (default `3mo`; 400 on an invalid range, 404 if not tracked) |
+| `GET /api/symbols` | The full master catalog as static reference data (name, asset class, region, country/exchange codes) — `Quote` only carries price data, so the frontend joins this against `/api/quotes` client-side for anything that needs classification, like the map's country coloring |
 
 All responses are JSON with camelCase field names. A quote looks like:
 
@@ -286,7 +289,7 @@ All responses are JSON with camelCase field names. A quote looks like:
 or live Yahoo access required, since it runs against in-memory fakes of the
 `LiveCache`/`HistoryStore` ports. Coverage includes:
 
-- All 4 REST endpoints, exercised through the real router and handlers
+- All 5 REST endpoints, exercised through the real router and handlers
   (`net/http/httptest`) against fake ports.
 - `QueryService` unit tests, including a regression guard ensuring the
   history endpoint always serializes an empty result as `[]`, never `null`.
@@ -333,12 +336,14 @@ sensible local-dev defaults.
 
 Backend: feature-complete for the MVP's core (steps 1-5 of the original
 plan) — symbol catalog, Yahoo adapter, Redis/Mongo persistence, all five
-workers, market-hours calculation, and the quotes + history REST API.
+workers, market-hours calculation, and the quotes/history/symbols REST API.
 
-Frontend: scaffolded (Vite + React + TypeScript + D3, API client, polling
-hook) and verified against the real backend end-to-end. The actual D3
-choropleth map, historical scrubber, trend layer, and detail panel are not
-yet built.
+Frontend: the D3 choropleth map is built and working — world topology,
+Natural Earth projection, coloring by daily percentage change, market-hours
+opacity, and a hover tooltip, all verified against real backend data (see
+screenshot above). Not yet built: the historical scrubber and 1-year trend
+layer (the `/api/history` endpoint they need already exists backend-side,
+just unused by the frontend so far) and the detail panel on click.
 
 Not started: the capital-flow proxy layer (lowest MVP priority by design).
 
