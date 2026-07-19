@@ -36,6 +36,15 @@ const (
 	HistoryRange3Month HistoryRange = "3mo"
 	HistoryRange1Year  HistoryRange = "1y"
 	HistoryRangeMax    HistoryRange = "max"
+
+	// HistoryRange10Year is not part of the public API's `range` query
+	// param — it's used internally as the actual Yahoo fetch range for
+	// backfills. Yahoo's v8/chart endpoint silently coarsens interval=1d
+	// data to quarterly bars once range=max spans decades, so requesting
+	// "max" from Yahoo directly produces unusable sparse history. 10y is
+	// long enough to cover every range this API exposes (up to 1y) with
+	// real daily granularity, confirmed against a live request.
+	HistoryRange10Year HistoryRange = "10y"
 )
 
 // HistoryPoint is a single day's close in a symbol's historical series.

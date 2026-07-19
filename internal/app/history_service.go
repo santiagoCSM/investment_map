@@ -38,7 +38,13 @@ func (s *HistoryService) RefreshSymbol(ctx context.Context, symbol string) error
 }
 
 func (s *HistoryService) backfill(ctx context.Context, symbol string) error {
-	points, err := s.fetcher.FetchHistory(ctx, symbol, domain.HistoryRangeMax)
+	// Deliberately HistoryRange10Year, not HistoryRangeMax: Yahoo silently
+	// coarsens interval=1d data to quarterly bars once range=max spans
+	// decades, which produced unusable sparse history when this fetched
+	// "max" directly (confirmed live: 168 points back to 1985, mostly
+	// 3-month gaps). 10y is confirmed to return true daily granularity and
+	// comfortably covers every range this API exposes (up to 1y).
+	points, err := s.fetcher.FetchHistory(ctx, symbol, domain.HistoryRange10Year)
 	if err != nil {
 		return fmt.Errorf("history: backfill %s: %w", symbol, err)
 	}

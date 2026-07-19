@@ -49,6 +49,8 @@ func toYahooRange(rng domain.HistoryRange) (string, error) {
 		return "1y", nil
 	case domain.HistoryRangeMax:
 		return "max", nil
+	case domain.HistoryRange10Year:
+		return "10y", nil
 	default:
 		return "", fmt.Errorf("yahoo: unsupported history range %q", rng)
 	}
