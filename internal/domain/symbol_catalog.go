@@ -20,14 +20,17 @@ const (
 	RegionAsia         Region = "asia"
 )
 
-// Symbol is a single tracked instrument in the master catalog.
+// Symbol is a single tracked instrument in the master catalog. JSON tags
+// matter here: this is served as static reference data via GET
+// /api/symbols so the frontend can join it against live Quotes (which
+// only carry price data, not classification) for map coloring/grouping.
 type Symbol struct {
-	Ticker       string // Yahoo Finance ticker, e.g. "^GSPC", "EWW", "USDMXN=X"
-	Name         string
-	AssetClass   AssetClass
-	Region       Region
-	CountryCode  string // ISO 3166-1 alpha-2, used to key the choropleth map
-	ExchangeCode string // references Exchange.Code, empty for forex pairs
+	Ticker       string     `json:"ticker"` // Yahoo Finance ticker, e.g. "^GSPC", "EWW", "USDMXN=X"
+	Name         string     `json:"name"`
+	AssetClass   AssetClass `json:"assetClass"`
+	Region       Region     `json:"region"`
+	CountryCode  string     `json:"countryCode"`  // ISO 3166-1 alpha-2, used to key the choropleth map
+	ExchangeCode string     `json:"exchangeCode"` // references Exchange.Code, empty for forex pairs
 }
 
 // MasterCatalog is the full set of instruments tracked by the MVP.

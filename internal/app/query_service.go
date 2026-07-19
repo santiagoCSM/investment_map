@@ -52,6 +52,15 @@ func (s *QueryService) GetHistory(ctx context.Context, symbol string, rng domain
 	return points, nil
 }
 
+// ListSymbols returns the full master catalog as static reference data
+// (name, asset class, region, country/exchange codes). The frontend joins
+// this against ListQuotes' results client-side — Quote only carries price
+// data, not classification, so anything that groups or colors by country
+// (the map) or asset class needs both.
+func (s *QueryService) ListSymbols() []domain.Symbol {
+	return domain.MasterCatalog
+}
+
 func (s *QueryService) isTracked(symbol string) bool {
 	for _, s := range s.symbols {
 		if s == symbol {

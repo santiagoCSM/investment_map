@@ -21,6 +21,7 @@ func NewRouter(query *app.QueryService) http.Handler {
 	mux.HandleFunc("GET /api/quotes", h.handleListQuotes)
 	mux.HandleFunc("GET /api/quotes/{symbol}", h.handleGetQuote)
 	mux.HandleFunc("GET /api/history/{symbol}", h.handleGetHistory)
+	mux.HandleFunc("GET /api/symbols", h.handleListSymbols)
 	return mux
 }
 

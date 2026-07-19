@@ -105,6 +105,21 @@ func TestListQuotesEndpoint(t *testing.T) {
 	}
 }
 
+func TestListSymbolsEndpoint(t *testing.T) {
+	rec := doRequest(t, newTestRouter(), "/api/symbols")
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d (body: %s)", rec.Code, http.StatusOK, rec.Body.String())
+	}
+
+	var symbols []domain.Symbol
+	if err := json.Unmarshal(rec.Body.Bytes(), &symbols); err != nil {
+		t.Fatalf("decode response: %v", err)
+	}
+	if len(symbols) != len(domain.MasterCatalog) {
+		t.Fatalf("got %d symbols, want %d", len(symbols), len(domain.MasterCatalog))
+	}
+}
+
 func TestGetQuoteEndpoint(t *testing.T) {
 	tests := []struct {
 		name       string
