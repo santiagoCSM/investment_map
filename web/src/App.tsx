@@ -1,59 +1,33 @@
 import { useQuotes } from './hooks/useQuotes'
 import { useSymbolCatalog } from './hooks/useSymbolCatalog'
 import { WorldMap } from './components/Map/WorldMap'
+import { DataPanel } from './components/DataPanel/DataPanel'
 import { Legend } from './components/Legend/Legend'
 import './App.css'
 
+// The map is the product, so it gets top billing, but it's laid out
+// normally now (a flex column: map area, then legend row) rather than
+// pinned full-viewport with everything floating on top of it — that was
+// letting the legend overlap map content. DataPanel stays a floating,
+// draggable overlay on top of the map area; the legend is a plain block
+// row with its own reserved space below it.
 function App() {
   const { quotes, loading: quotesLoading, error: quotesError } = useQuotes()
   const { symbols, loading: symbolsLoading, error: symbolsError } = useSymbolCatalog()
 
-  const loading = quotesLoading || symbolsLoading
-  const error = quotesError ?? symbolsError
-
   return (
-    <main>
-      <h1>Mapa de Inversiones</h1>
-
-      {error && <p className="status status--error">error: {error}</p>}
-      {loading && !error && <p className="status">loading…</p>}
-
-      {!loading && !error && (
-        <>
-          <Legend />
-          <WorldMap quotes={quotes} symbols={symbols} />
-
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Price</th>
-                <th>Change</th>
-                <th>% Change</th>
-                <th>Market</th>
-                <th>Last Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              {quotes.map((q) => (
-                <tr key={q.symbol}>
-                  <td>{q.symbol}</td>
-                  <td>
-                    {q.price.toLocaleString(undefined, { maximumFractionDigits: 2 })} {q.currency}
-                  </td>
-                  <td className={q.change >= 0 ? 'positive' : 'negative'}>{q.change.toFixed(2)}</td>
-                  <td className={q.changePercent >= 0 ? 'positive' : 'negative'}>
-                    {q.changePercent.toFixed(2)}%
-                  </td>
-                  <td>{q.marketState}</td>
-                  <td>{new Date(q.lastUpdated).toLocaleTimeString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
-      )}
-    </main>
+    <div className="app-shell">
+      <div className="map-area">
+        <WorldMap quotes={quotes} symbols={symbols} />
+        <DataPanel
+          quotes={quotes}
+          symbols={symbols}
+          loading={quotesLoading || symbolsLoading}
+          error={quotesError ?? symbolsError}
+        />
+      </div>
+      <Legend />
+    </div>
   )
 }
 

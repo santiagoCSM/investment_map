@@ -1,38 +1,34 @@
-main {
-  max-width: 960px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  font-family: system-ui, sans-serif;
+.app-shell {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* The map only gets whatever space is left after the legend's normal-flow
+   row below — it no longer assumes the full viewport, so the two never
+   overlap. WorldMap measures this element's actual box via ResizeObserver,
+   so it stays correct as the legend/window resize. */
+.map-area {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .status {
-  text-align: center;
-  margin-top: 4rem;
   font-family: system-ui, sans-serif;
-  color: #666;
+  color: #9aa0ab;
+  font-size: 0.85rem;
 }
 
 .status--error {
-  color: #c0392b;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-variant-numeric: tabular-nums;
-}
-
-th,
-td {
-  text-align: left;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid #ddd;
+  color: #ff6b6b;
 }
 
 .positive {
-  color: #1e8e3e;
+  color: #6fcf6f;
 }
 
 .negative {
-  color: #c0392b;
+  color: #ff6b6b;
 }
