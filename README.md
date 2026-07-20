@@ -328,9 +328,14 @@ Other useful targets: `make build`, `make test`, `make fmt`, `make vet`,
 `make smoketest-yahoo`, `make smoketest-store`, `make smoketest-market-status`.
 
 Configuration is entirely environment-variable driven (see
-`config/config.go`): `REDIS_ADDR`, `MONGO_URI`, `MONGO_DATABASE`,
+`config/config.go`): `REDIS_URL`, `MONGO_URI`, `MONGO_DATABASE`,
 `HTTP_ADDR`, `REFRESH_INTERVAL`, `HISTORY_REFRESH_INTERVAL`, all with
 sensible local-dev defaults.
+
+For running the whole thing in a container the way it deploys — a single
+image serving both the API and the built frontend — see the root
+`Dockerfile`. [DEPLOY.md](DEPLOY.md) has step-by-step instructions for
+deploying to Railway with Upstash (Redis) and MongoDB Atlas.
 
 ## Project status
 

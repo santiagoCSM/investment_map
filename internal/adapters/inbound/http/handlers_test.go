@@ -69,7 +69,7 @@ func newTestRouter() http.Handler {
 		"^GSPC": {{Close: 100}, {Close: 200}},
 	}}
 	query := app.NewQueryService(cache, store, []string{"^GSPC"})
-	return NewRouter(query)
+	return NewRouter(query, "")
 }
 
 func doRequest(t *testing.T, router http.Handler, path string) *httptest.ResponseRecorder {
@@ -181,7 +181,7 @@ func TestGetHistoryEndpoint_NoHistoryYet_ReturnsEmptyArrayNotNull(t *testing.T) 
 	cache := &fakeLiveCache{quotes: map[string]domain.Quote{}}
 	store := &fakeHistoryStore{points: map[string][]domain.HistoryPoint{}}
 	query := app.NewQueryService(cache, store, []string{"^GSPC"})
-	router := NewRouter(query)
+	router := NewRouter(query, "")
 
 	rec := doRequest(t, router, "/api/history/%5EGSPC")
 	if rec.Code != http.StatusOK {

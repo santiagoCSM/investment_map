@@ -13,7 +13,12 @@ type Handler struct {
 	query *app.QueryService
 }
 
-func NewRouter(query *app.QueryService) http.Handler {
+// NewRouter wires the REST API and, if staticDir is non-empty, serves the
+// built frontend from that directory for everything else — so in
+// production a single binary + a copy of web/dist is the whole deployable
+// unit, no separate frontend host needed. Pass "" to skip static serving
+// entirely (e.g. in tests, where there's nothing to serve).
+func NewRouter(query *app.QueryService, staticDir string) http.Handler {
 	h := &Handler{query: query}
 
 	mux := http.NewServeMux()
@@ -22,6 +27,10 @@ func NewRouter(query *app.QueryService) http.Handler {
 	mux.HandleFunc("GET /api/quotes/{symbol}", h.handleGetQuote)
 	mux.HandleFunc("GET /api/history/{symbol}", h.handleGetHistory)
 	mux.HandleFunc("GET /api/symbols", h.handleListSymbols)
+
+	if staticDir != "" {
+		mux.Handle("/", spaFileServer(staticDir))
+	}
 	return mux
 }
 
