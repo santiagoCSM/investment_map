@@ -88,9 +88,9 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
       return { alpha2, quote }
     }
 
-    svg
-      .append('g')
-      .selectAll('path')
+    const g = svg.append('g')
+
+    g.selectAll('path')
       .data(countries.features)
       .join('path')
       .attr('class', 'country')
@@ -119,7 +119,80 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
         })
       })
       .on('mouseleave', () => setTooltip(null))
+
   }, [countries, quoteByCountry, symbolByTicker, colorScale, size])
+
+  // Interactive zoom and pan
+  useEffect(() => {
+    if (!svgRef.current) return
+
+    const svg = svgRef.current
+    const g = svg.querySelector('g')
+    if (!g) return
+
+    let scale = 1.3
+    let translateX = 0
+    let translateY = 0
+
+    const updateTransform = () => {
+      g.setAttribute('transform', `translate(${translateX},${translateY}) scale(${scale})`)
+    }
+
+    updateTransform()
+    svg.style.cursor = 'grab'
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault()
+      const rect = svg.getBoundingClientRect()
+      const mouseX = e.clientX - rect.left
+      const mouseY = e.clientY - rect.top
+      const oldScale = scale
+      const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1
+      scale = Math.max(1, Math.min(8, scale * zoomFactor))
+      translateX -= (mouseX / oldScale - mouseX / scale) * oldScale
+      translateY -= (mouseY / oldScale - mouseY / scale) * oldScale
+      updateTransform()
+    }
+
+    let isMouseDown = false
+    let startX = 0
+    let startY = 0
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isMouseDown = true
+      startX = e.clientX
+      startY = e.clientY
+      svg.style.cursor = 'grabbing'
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isMouseDown) return
+      const dx = e.clientX - startX
+      const dy = e.clientY - startY
+      translateX += dx
+      translateY += dy
+      startX = e.clientX
+      startY = e.clientY
+      updateTransform()
+    }
+
+    const handleMouseUp = () => {
+      isMouseDown = false
+      svg.style.cursor = 'grab'
+    }
+
+    svg.addEventListener('wheel', handleWheel, { passive: false })
+    svg.addEventListener('mousedown', handleMouseDown)
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+
+    return () => {
+      svg.removeEventListener('wheel', handleWheel)
+      svg.removeEventListener('mousedown', handleMouseDown)
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [])
 
   return (
     <div ref={containerRef} className="world-map">

@@ -1,18 +1,16 @@
 .app-shell {
   height: 100vh;
-  display: flex;
-  flex-direction: column;
+  position: relative;
   overflow: hidden;
 }
 
-/* The map only gets whatever space is left after the legend's normal-flow
-   row below — it no longer assumes the full viewport, so the two never
-   overlap. WorldMap measures this element's actual box via ResizeObserver,
-   so it stays correct as the legend/window resize. */
+/* The map always fills the full viewport height; the legend sits absolute
+   at the bottom with a semi-opaque background so it's not a floating overlay
+   that feels detached from the map. ResizeObserver on the map-area catches
+   the actual usable height (100vh in this case). */
 .map-area {
   position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
+  height: 100vh;
 }
 
 .status {
