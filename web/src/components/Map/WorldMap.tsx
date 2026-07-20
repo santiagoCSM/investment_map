@@ -7,9 +7,6 @@ import type { Quote } from '../../types/quote'
 import type { Symbol } from '../../types/symbol'
 import './WorldMap.css'
 
-const WIDTH = 960
-const HEIGHT = 500
-
 interface WorldMapProps {
   quotes: Quote[]
   symbols: Symbol[]
@@ -22,10 +19,31 @@ interface TooltipState {
   symbolName: string
 }
 
+interface Size {
+  width: number
+  height: number
+}
+
 export function WorldMap({ quotes, symbols }: WorldMapProps) {
   const { countries, loading, error } = useWorldAtlas()
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [tooltip, setTooltip] = useState<TooltipState | null>(null)
+  const [size, setSize] = useState<Size>({ width: 0, height: 0 })
+
+  // The map is full-bleed now (the whole viewport is its container), so
+  // unlike a fixed viewBox it needs to know the container's actual pixel
+  // size to fit the projection for whatever screen shape it's given.
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new ResizeObserver((entries) => {
+      const { width, height } = entries[0].contentRect
+      setSize({ width, height })
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   // ticker -> Symbol, for joining quotes with country/assetClass metadata
   // that Quote itself doesn't carry.
@@ -56,12 +74,12 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
   )
 
   useEffect(() => {
-    if (!countries || !svgRef.current) return
+    if (!countries || !svgRef.current || size.width === 0 || size.height === 0) return
 
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove()
 
-    const projection = d3.geoNaturalEarth1().fitSize([WIDTH, HEIGHT], countries)
+    const projection = d3.geoNaturalEarth1().fitSize([size.width, size.height], countries)
     const path = d3.geoPath(projection)
 
     const lookup = (feature: Feature<Geometry>) => {
@@ -101,16 +119,16 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
         })
       })
       .on('mouseleave', () => setTooltip(null))
-  }, [countries, quoteByCountry, symbolByTicker, colorScale])
-
-  if (loading) return <p className="status">loading map…</p>
-  if (error) return <p className="status status--error">error: {error}</p>
+  }, [countries, quoteByCountry, symbolByTicker, colorScale, size])
 
   return (
-    <div className="world-map">
+    <div ref={containerRef} className="world-map">
+      {loading && <p className="status status--overlay">loading map…</p>}
+      {error && <p className="status status--error status--overlay">error: {error}</p>}
       <svg
         ref={svgRef}
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        width={size.width}
+        height={size.height}
         role="img"
         aria-label="World market status map"
       />

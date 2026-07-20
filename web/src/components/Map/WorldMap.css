@@ -1,15 +1,22 @@
 .world-map {
-  position: relative;
+  position: absolute;
+  inset: 0;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
   --map-no-data: #2a2f3a;
+  background: var(--map-ocean, #0d0f14);
 }
 
 .world-map svg {
-  width: 100%;
-  height: auto;
   display: block;
-  background: var(--map-ocean, #12151c);
-  border-radius: 8px;
+}
+
+.status--overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .country {
