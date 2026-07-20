@@ -10,6 +10,11 @@
 
 .world-map svg {
   display: block;
+  cursor: grab;
+}
+
+.world-map svg:active {
+  cursor: grabbing;
 }
 
 .status--overlay {
@@ -22,6 +27,9 @@
 .country {
   stroke: #0d0f14;
   stroke-width: 0.5;
+  /* Borders keep their on-screen thickness at any zoom level instead of
+     scaling up with the map. */
+  vector-effect: non-scaling-stroke;
   transition: opacity 0.2s ease;
   cursor: pointer;
 }
