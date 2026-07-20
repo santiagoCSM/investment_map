@@ -16,10 +16,18 @@ type Adapter struct {
 	client *goredis.Client
 }
 
-func New(addr string) *Adapter {
-	return &Adapter{
-		client: goredis.NewClient(&goredis.Options{Addr: addr}),
+// New takes a full Redis connection URL, not a bare host:port — e.g.
+// "redis://localhost:6379" for local dev, or Upstash's "rediss://
+// default:PASSWORD@HOST:PORT" in production, where the "rediss" scheme is
+// what actually enables TLS. A bare address has no way to carry that
+// scheme, a password, or a db index, so a hardcoded host:port option
+// wouldn't reach an authenticated/TLS Redis at all.
+func New(url string) (*Adapter, error) {
+	opts, err := goredis.ParseURL(url)
+	if err != nil {
+		return nil, fmt.Errorf("redis: parse url: %w", err)
 	}
+	return &Adapter{client: goredis.NewClient(opts)}, nil
 }
 
 func (a *Adapter) Ping(ctx context.Context) error {

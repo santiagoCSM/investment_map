@@ -22,10 +22,11 @@ type WorkerConfig struct {
 // slowing down quotes-mexico alone if Yahoo starts rate-limiting just
 // those requests, without touching the others.
 type Config struct {
-	RedisAddr     string
+	RedisURL      string
 	MongoURI      string
 	MongoDatabase string
 	HTTPAddr      string
+	StaticDir     string
 	CacheTTL      time.Duration
 
 	QuotesUS         WorkerConfig
@@ -48,10 +49,11 @@ func Load() Config {
 	historyInterval := getDurationEnv("HISTORY_REFRESH_INTERVAL", 24*time.Hour)
 
 	return Config{
-		RedisAddr:     getEnv("REDIS_ADDR", "localhost:6379"),
+		RedisURL:      getEnv("REDIS_URL", "redis://localhost:6379"),
 		MongoURI:      getEnv("MONGO_URI", "mongodb://localhost:27017"),
 		MongoDatabase: getEnv("MONGO_DATABASE", "investment_map"),
-		HTTPAddr:      getEnv("HTTP_ADDR", ":8080"),
+		HTTPAddr:      httpAddr(),
+		StaticDir:     getEnv("STATIC_DIR", "web/dist"),
 		CacheTTL:      10 * time.Minute,
 
 		QuotesUS:         WorkerConfig{Name: "quotes-us", Symbols: usIndexSymbols(), Interval: interval},
@@ -107,6 +109,17 @@ func allCatalogSymbols() []string {
 		symbols[i] = s.Ticker
 	}
 	return symbols
+}
+
+// httpAddr checks PORT first — Railway (and Render/Heroku) assign a port
+// dynamically and expect the app to bind to it via that env var, not a
+// fixed one we pick ourselves. HTTP_ADDR remains for local dev / anywhere
+// else that wants to set a full "host:port" explicitly.
+func httpAddr() string {
+	if port := os.Getenv("PORT"); port != "" {
+		return ":" + port
+	}
+	return getEnv("HTTP_ADDR", ":8080")
 }
 
 func getEnv(key, fallback string) string {

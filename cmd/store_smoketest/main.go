@@ -25,7 +25,10 @@ func main() {
 	yh := yahoo.New()
 
 	// --- Redis: live cache round trip ---
-	cache := redis.New("localhost:6379")
+	cache, err := redis.New("redis://localhost:6379")
+	if err != nil {
+		log.Fatalf("redis config invalid: %v", err)
+	}
 	defer cache.Close()
 	if err := cache.Ping(ctx); err != nil {
 		log.Fatalf("redis ping failed: %v", err)

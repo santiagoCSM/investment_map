@@ -27,7 +27,11 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	cache := redis.New(cfg.RedisAddr)
+	cache, err := redis.New(cfg.RedisURL)
+	if err != nil {
+		log.Error("redis config invalid, aborting startup", "err", err)
+		os.Exit(1)
+	}
 	defer cache.Close()
 	if err := cache.Ping(ctx); err != nil {
 		log.Error("redis unreachable, aborting startup", "err", err)
@@ -70,7 +74,7 @@ func main() {
 	}()
 
 	query := app.NewQueryService(cache, store, allSymbols)
-	router := inboundhttp.NewRouter(query)
+	router := inboundhttp.NewRouter(query, cfg.StaticDir)
 	server := &http.Server{Addr: cfg.HTTPAddr, Handler: router}
 
 	go func() {
