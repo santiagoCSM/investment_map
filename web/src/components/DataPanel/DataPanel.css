@@ -1,0 +1,82 @@
+.data-panel {
+  position: fixed;
+  width: 220px;
+  max-height: min(60vh, 420px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0.7rem 0.8rem 0.9rem;
+  background: rgba(16, 18, 24, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  color: #eaeaea;
+  font-family: system-ui, sans-serif;
+  text-align: left;
+  z-index: 20;
+}
+
+.data-panel__header {
+  cursor: grab;
+  touch-action: none;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  user-select: none;
+}
+
+.data-panel__header:active {
+  cursor: grabbing;
+}
+
+.data-panel__header h1 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin: 0;
+}
+
+.data-panel__subtitle {
+  font-size: 0.68rem;
+  color: #8a8f9c;
+  margin: 0.1rem 0 0;
+}
+
+.quote-list {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.quote-list__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.28rem 0.35rem;
+  border-radius: 6px;
+  font-size: 0.74rem;
+}
+
+.quote-list__row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.quote-list__name {
+  color: #d6d8dd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.quote-list__change {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
