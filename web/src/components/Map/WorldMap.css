@@ -11,7 +11,10 @@ svg:active {
   stroke: var(--map-border);
   stroke-width: 0.5;
   vector-effect: non-scaling-stroke;
-  transition: opacity 0.2s ease;
+  /* Fill/opacity are animated by D3 (see WorldMap.tsx's style pass) so
+     they can tween smoothly on real data changes; only the interactive
+     hover/selection feedback needs to be instant-ish CSS transitions. */
+  transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.25s ease;
   cursor: pointer;
 }
 
@@ -20,23 +23,23 @@ svg:active {
   stroke-width: 1;
 }
 
-.map-tooltip {
-  position: absolute;
-  pointer-events: none;
-  background: var(--panel-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: var(--panel-text);
-  border: 1px solid var(--panel-border);
-  border-radius: 6px;
-  padding: 0.5rem 0.75rem;
-  font-family: var(--sans);
-  font-size: 0.85rem;
-  line-height: 1.4;
-  white-space: nowrap;
-  z-index: 10;
+.country--selected {
+  stroke: #fff;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.35));
 }
 
-.map-tooltip .muted {
-  color: var(--panel-text-muted);
+@keyframes map-tooltip-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.map-tooltip {
+  animation: map-tooltip-in 150ms ease-out;
 }

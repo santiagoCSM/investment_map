@@ -6,7 +6,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="fixed top-5 left-5 z-20 flex items-center justify-center size-[34px] p-0 border border-[var(--panel-border)] rounded-[10px] bg-[var(--panel-bg)] backdrop-blur-[14px] text-[var(--panel-text)] cursor-pointer transition-all duration-150 hover:scale-105 active:scale-95"
+      className="absolute top-5 left-5 z-20 flex size-[34px] items-center justify-center rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-0 text-[var(--panel-text)] backdrop-blur-[14px] transition-all duration-150 hover:scale-105 active:scale-95"
       onClick={toggle}
       aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
       title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}

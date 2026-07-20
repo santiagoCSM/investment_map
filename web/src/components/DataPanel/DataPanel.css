@@ -1,6 +1,6 @@
 @media (max-width: 640px), (max-height: 640px) {
-  [class*='data-panel'] {
-    top: 12px !important;
+  .data-panel {
+    top: 56px !important;
     right: 12px !important;
     width: min(190px, calc(100vw - 24px)) !important;
     max-height: min(34dvh, 250px) !important;
@@ -11,25 +11,25 @@
     border-radius: 10px !important;
   }
 
-  [class*='data-panel'] header {
+  .data-panel header {
     padding-bottom: 0.25rem !important;
     margin-bottom: 0.05rem !important;
   }
 
-  [class*='data-panel'] h1 {
+  .data-panel h1 {
     font-size: 0.82rem !important;
   }
 
-  [class*='data-panel'] > p:first-of-type {
+  .data-panel > p:first-of-type {
     font-size: 0.6rem !important;
     margin-top: 0 !important;
   }
 
-  [class*='data-panel'] ul {
+  .data-panel ul {
     margin-top: 0.22rem !important;
   }
 
-  [class*='data-panel'] li {
+  .data-panel li {
     gap: 0.35rem !important;
     padding: 0.17rem 0.22rem !important;
     font-size: 0.65rem !important;

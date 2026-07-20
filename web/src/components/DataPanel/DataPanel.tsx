@@ -32,7 +32,7 @@ export function DataPanel({ quotes, symbols, loading, error }: DataPanelProps) {
   return (
     <aside
       ref={panelRef as React.RefObject<HTMLElement>}
-      className="fixed top-5 right-5 w-[220px] max-h-[min(60vh,420px)] overflow-y-auto box-border p-[0.7rem_0.8rem_0.9rem] bg-[var(--panel-bg)] backdrop-blur-[14px] border border-[var(--panel-border)] rounded-[12px] shadow-[0_12px_40px_rgba(0,0,0,0.3)] text-[var(--panel-text)] font-[var(--sans)] text-left z-20"
+      className="data-panel fixed top-[60px] right-5 z-20 box-border max-h-[min(60vh,420px)] w-[220px] overflow-y-auto rounded-[12px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-[0.7rem_0.8rem_0.9rem] text-left font-[var(--sans)] text-[var(--panel-text)] shadow-[0_12px_40px_rgba(0,0,0,0.3)] backdrop-blur-[14px]"
       style={position ? { left: position.x, top: position.y, right: 'auto' } : undefined}
     >
       <header className="cursor-grab touch-none select-none pb-2.5 mb-0.5 border-b border-b-[var(--panel-border)]" onPointerDown={onHandlePointerDown}>
