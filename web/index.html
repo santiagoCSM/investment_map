@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mapa de Inversiones</title>
+    <script>
+      // Set data-theme before first paint so there's no flash of the
+      // wrong theme — mirrors the logic in src/hooks/useTheme.ts.
+      (function () {
+        var stored = localStorage.getItem('theme')
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        document.documentElement.setAttribute('data-theme', theme)
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -1,53 +1,59 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --sans:
+    'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
+  font: 15px/145% var(--sans);
+  letter-spacing: 0.1px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* Theme tokens for the map, floating panel, legend and toggle button.
+   data-theme is set on <html> by an inline script in index.html (before
+   first paint) and kept in sync by src/hooks/useTheme.ts, so there's a
+   single source of truth instead of relying on prefers-color-scheme
+   directly in each component. */
+:root[data-theme='dark'] {
+  --map-ocean: #0d0f14;
+  --map-no-data: #2a2f3a;
+  --map-border: #0d0f14;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --panel-bg: rgba(16, 18, 24, 0.72);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-text: #eaeaea;
+  --panel-text-strong: #fff;
+  --panel-text-muted: #8a8f9c;
+  --panel-row-hover: rgba(255, 255, 255, 0.06);
+
+  --legend-bg: rgba(0, 0, 0, 0.6);
+  --legend-text: #888;
+  --legend-sep: rgba(255, 255, 255, 0.15);
+
+  --positive: #6fcf6f;
+  --negative: #ff6b6b;
+}
+
+:root[data-theme='light'] {
+  --map-ocean: #dce6ee;
+  --map-no-data: #c3cbd6;
+  --map-border: #dce6ee;
+
+  --panel-bg: rgba(255, 255, 255, 0.78);
+  --panel-border: rgba(0, 0, 0, 0.08);
+  --panel-text: #2a2d34;
+  --panel-text-strong: #0d0f14;
+  --panel-text-muted: #6b7280;
+  --panel-row-hover: rgba(0, 0, 0, 0.05);
+
+  --legend-bg: rgba(255, 255, 255, 0.72);
+  --legend-text: #4b5563;
+  --legend-sep: rgba(0, 0, 0, 0.15);
+
+  --positive: #2e9e44;
+  --negative: #d43f3f;
 }
 
 #root {
@@ -63,51 +69,12 @@ body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  /* The map is a fixed dark "HUD" background regardless of OS light/dark
-     preference — this just prevents a white flash before it mounts. */
-  background: #0d0f14;
+  /* Matches --map-ocean so there's no flash of the wrong color before
+     the map mounts; the inline script in index.html sets data-theme
+     ahead of this rule so it's already correct on first paint. */
+  background: var(--map-ocean);
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
 }

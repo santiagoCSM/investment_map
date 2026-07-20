@@ -11,17 +11,18 @@
   gap: 0.55rem;
   padding: 6px 12px;
   font-size: 0.68rem;
-  color: #888;
-  font-family: system-ui, sans-serif;
+  color: var(--legend-text);
+  font-family: var(--sans);
   line-height: 1;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--legend-bg);
   backdrop-filter: blur(4px);
   pointer-events: auto;
   z-index: 10;
 }
 
 .legend__scale-label {
-  color: #888;
+  font-family: var(--mono);
+  color: var(--legend-text);
 }
 
 .legend__gradient {
@@ -39,14 +40,14 @@
 .legend__sep {
   width: 1px;
   height: 10px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--legend-sep);
 }
 
 .legend__note {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  color: #888;
+  color: var(--legend-text);
 }
 
 .legend__dot {

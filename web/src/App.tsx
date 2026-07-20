@@ -3,6 +3,7 @@ import { useSymbolCatalog } from './hooks/useSymbolCatalog'
 import { WorldMap } from './components/Map/WorldMap'
 import { DataPanel } from './components/DataPanel/DataPanel'
 import { Legend } from './components/Legend/Legend'
+import { ThemeToggle } from './components/ThemeToggle/ThemeToggle'
 import './App.css'
 
 // The map is the product, so it gets top billing, but it's laid out
@@ -19,6 +20,7 @@ function App() {
     <div className="app-shell">
       <div className="map-area">
         <WorldMap quotes={quotes} symbols={symbols} />
+        <ThemeToggle />
         <DataPanel
           quotes={quotes}
           symbols={symbols}

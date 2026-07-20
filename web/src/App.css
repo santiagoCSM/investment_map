@@ -14,19 +14,19 @@
 }
 
 .status {
-  font-family: system-ui, sans-serif;
-  color: #9aa0ab;
+  font-family: var(--sans);
+  color: var(--panel-text-muted);
   font-size: 0.85rem;
 }
 
 .status--error {
-  color: #ff6b6b;
+  color: var(--negative);
 }
 
 .positive {
-  color: #6fcf6f;
+  color: var(--positive);
 }
 
 .negative {
-  color: #ff6b6b;
+  color: var(--negative);
 }
