@@ -1,5 +1,4 @@
 import * as d3 from 'd3'
-import './Legend.css'
 
 // Mirrors the WorldMap's color scale exactly (domain [-2, 0, 2], same
 // interpolator) so the legend never drifts out of sync with what's
@@ -14,23 +13,23 @@ const STOPS = [-2, -1, 0, 1, 2]
 // a legend card, so it shouldn't claim more vertical space than the map.
 export function Legend() {
   return (
-    <div className="legend">
-      <span className="legend__scale-label">-2%</span>
-      <div className="legend__gradient">
+    <div className="absolute bottom-0 left-0 right-0 flex flex-row items-center justify-center flex-wrap gap-2 px-3 py-1.5 text-xs text-[var(--legend-text)] font-[var(--sans)] leading-none bg-[var(--legend-bg)] backdrop-blur-sm z-10">
+      <span className="font-[var(--mono)] text-[var(--legend-text)]">-2%</span>
+      <div className="flex w-[110px] h-[7px] rounded overflow-hidden">
         {STOPS.map((v) => (
-          <div key={v} className="legend__swatch" style={{ background: colorScale(v) }} />
+          <div key={v} className="flex-1" style={{ background: colorScale(v) }} />
         ))}
       </div>
-      <span className="legend__scale-label">+2%</span>
+      <span className="font-[var(--mono)] text-[var(--legend-text)]">+2%</span>
 
-      <span className="legend__sep" />
+      <span className="w-px h-2.5 bg-[var(--legend-sep)]" />
 
-      <span className="legend__note">
-        <span className="legend__dot" style={{ background: 'var(--map-no-data, #2a2f3a)' }} />
+      <span className="inline-flex items-center gap-0.75 text-[var(--legend-text)]">
+        <span className="inline-block w-[7px] h-[7px] rounded-sm" style={{ background: 'var(--map-no-data, #2a2f3a)' }} />
         no data
       </span>
-      <span className="legend__note">
-        <span className="legend__opacity-sample" />
+      <span className="inline-flex items-center gap-0.75 text-[var(--legend-text)]">
+        <span className="inline-block w-[7px] h-[7px] rounded-sm bg-[#4caf50] opacity-60" />
         closed
       </span>
     </div>

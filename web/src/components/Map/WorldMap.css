@@ -1,35 +1,15 @@
-.world-map {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: var(--map-ocean);
-}
-
-.world-map svg {
+svg {
   display: block;
   cursor: grab;
 }
 
-.world-map svg:active {
+svg:active {
   cursor: grabbing;
-}
-
-.status--overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--panel-text);
-  font-family: var(--sans);
 }
 
 .country {
   stroke: var(--map-border);
   stroke-width: 0.5;
-  /* Borders keep their on-screen thickness at any zoom level instead of
-     scaling up with the map. */
   vector-effect: non-scaling-stroke;
   transition: opacity 0.2s ease;
   cursor: pointer;

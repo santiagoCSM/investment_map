@@ -4,7 +4,6 @@ import { WorldMap } from './components/Map/WorldMap'
 import { DataPanel } from './components/DataPanel/DataPanel'
 import { Legend } from './components/Legend/Legend'
 import { ThemeToggle } from './components/ThemeToggle/ThemeToggle'
-import './App.css'
 
 // The map is the product, so it gets top billing, but it's laid out
 // normally now (a flex column: map area, then legend row) rather than
@@ -17,8 +16,8 @@ function App() {
   const { symbols, loading: symbolsLoading, error: symbolsError } = useSymbolCatalog()
 
   return (
-    <div className="app-shell">
-      <div className="map-area">
+    <div className="app-shell relative flex h-dvh flex-col overflow-hidden">
+      <div className="map-area relative min-h-0 flex-1">
         <WorldMap quotes={quotes} symbols={symbols} />
         <ThemeToggle />
         <DataPanel

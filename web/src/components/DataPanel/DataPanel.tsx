@@ -32,23 +32,23 @@ export function DataPanel({ quotes, symbols, loading, error }: DataPanelProps) {
   return (
     <aside
       ref={panelRef as React.RefObject<HTMLElement>}
-      className="data-panel"
+      className="fixed top-5 right-5 w-[220px] max-h-[min(60vh,420px)] overflow-y-auto box-border p-[0.7rem_0.8rem_0.9rem] bg-[var(--panel-bg)] backdrop-blur-[14px] border border-[var(--panel-border)] rounded-[12px] shadow-[0_12px_40px_rgba(0,0,0,0.3)] text-[var(--panel-text)] font-[var(--sans)] text-left z-20"
       style={position ? { left: position.x, top: position.y, right: 'auto' } : undefined}
     >
-      <header className="data-panel__header" onPointerDown={onHandlePointerDown}>
-        <h1>Mapa de Inversiones</h1>
-        <p className="data-panel__subtitle">Live global market status</p>
+      <header className="cursor-grab touch-none select-none pb-2.5 mb-0.5 border-b border-b-[var(--panel-border)]" onPointerDown={onHandlePointerDown}>
+        <h1 className="text-[0.95rem] font-semibold tracking-tight text-[var(--panel-text-strong)] m-0">Mapa de Inversiones</h1>
+        <p className="text-[0.68rem] text-[var(--panel-text-muted)] m-0 mt-0.5">Live global market status</p>
       </header>
 
-      {loading && <p className="status">loading…</p>}
-      {error && <p className="status status--error">{error}</p>}
+      {loading && <p className="text-[var(--panel-text-muted)] text-sm">loading…</p>}
+      {error && <p className="text-[var(--negative)] text-sm">{error}</p>}
 
       {!loading && !error && (
-        <ul className="quote-list">
+        <ul className="list-none mt-2 p-0 m-0 flex flex-col gap-px">
           {sorted.map((q) => (
-            <li key={q.symbol} className="quote-list__row">
-              <span className="quote-list__name">{nameByTicker.get(q.symbol) ?? q.symbol}</span>
-              <span className={`quote-list__change ${q.changePercent >= 0 ? 'positive' : 'negative'}`}>
+            <li key={q.symbol} className="flex justify-between items-center gap-2 px-[0.35rem] py-[0.28rem] rounded-md text-xs hover:bg-[var(--panel-row-hover)]">
+              <span className="text-[var(--panel-text)] whitespace-nowrap overflow-hidden text-ellipsis">{nameByTicker.get(q.symbol) ?? q.symbol}</span>
+              <span className={`font-[var(--mono)] font-medium whitespace-nowrap flex-shrink-0 ${q.changePercent >= 0 ? 'text-[var(--positive)]' : 'text-[var(--negative)]'}`}>
                 {q.changePercent >= 0 ? '+' : ''}
                 {q.changePercent.toFixed(2)}%
               </span>

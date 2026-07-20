@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 :root {
   --sans:
     'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -22,6 +24,7 @@
   --map-border: #0d0f14;
 
   --panel-bg: rgba(16, 18, 24, 0.72);
+  --panel-bg-mobile: rgba(16, 18, 24, 0.45);
   --panel-border: rgba(255, 255, 255, 0.08);
   --panel-text: #eaeaea;
   --panel-text-strong: #fff;
@@ -42,6 +45,7 @@
   --map-border: #dce6ee;
 
   --panel-bg: rgba(255, 255, 255, 0.78);
+  --panel-bg-mobile: rgba(255, 255, 255, 0.5);
   --panel-border: rgba(0, 0, 0, 0.08);
   --panel-text: #2a2d34;
   --panel-text-strong: #0d0f14;

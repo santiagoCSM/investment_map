@@ -155,9 +155,9 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
   }, [countries, quoteByCountry, symbolByTicker, colorScale, size])
 
   return (
-    <div ref={containerRef} className="world-map">
-      {loading && <p className="status status--overlay">loading map…</p>}
-      {error && <p className="status status--error status--overlay">error: {error}</p>}
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-[var(--map-ocean)]">
+      {loading && <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--panel-text)] font-[var(--sans)] text-sm">loading map…</p>}
+      {error && <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[var(--negative)] font-[var(--sans)] text-sm">error: {error}</p>}
       <svg
         ref={svgRef}
         width={size.width}

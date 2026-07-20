@@ -1,87 +1,37 @@
-.data-panel {
-  position: fixed;
-  /* Default resting spot before the first drag. Deliberately plain CSS,
-     not a JS-measured position — see useDraggable's doc comment. */
-  top: 20px;
-  right: 20px;
-  width: 220px;
-  max-height: min(60vh, 420px);
-  overflow-y: auto;
-  box-sizing: border-box;
-  padding: 0.7rem 0.8rem 0.9rem;
-  background: var(--panel-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  color: var(--panel-text);
-  font-family: var(--sans);
-  text-align: left;
-  z-index: 20;
-}
+@media (max-width: 640px), (max-height: 640px) {
+  [class*='data-panel'] {
+    top: 12px !important;
+    right: 12px !important;
+    width: min(190px, calc(100vw - 24px)) !important;
+    max-height: min(34dvh, 250px) !important;
+    padding: 0.45rem 0.55rem 0.55rem !important;
+    background: var(--panel-bg-mobile) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border-radius: 10px !important;
+  }
 
-.data-panel__header {
-  cursor: grab;
-  touch-action: none;
-  padding-bottom: 0.4rem;
-  margin-bottom: 0.2rem;
-  border-bottom: 1px solid var(--panel-border);
-  user-select: none;
-}
+  [class*='data-panel'] header {
+    padding-bottom: 0.25rem !important;
+    margin-bottom: 0.05rem !important;
+  }
 
-.data-panel__header:active {
-  cursor: grabbing;
-}
+  [class*='data-panel'] h1 {
+    font-size: 0.82rem !important;
+  }
 
-.data-panel__header h1 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  color: var(--panel-text-strong);
-  margin: 0;
-}
+  [class*='data-panel'] > p:first-of-type {
+    font-size: 0.6rem !important;
+    margin-top: 0 !important;
+  }
 
-.data-panel__subtitle {
-  font-size: 0.68rem;
-  color: var(--panel-text-muted);
-  margin: 0.1rem 0 0;
-}
+  [class*='data-panel'] ul {
+    margin-top: 0.22rem !important;
+  }
 
-.quote-list {
-  list-style: none;
-  margin: 0.4rem 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.quote-list__row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.28rem 0.35rem;
-  border-radius: 6px;
-  font-size: 0.74rem;
-}
-
-.quote-list__row:hover {
-  background: var(--panel-row-hover);
-}
-
-.quote-list__name {
-  color: var(--panel-text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.quote-list__change {
-  font-family: var(--mono);
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  white-space: nowrap;
-  flex-shrink: 0;
+  [class*='data-panel'] li {
+    gap: 0.35rem !important;
+    padding: 0.17rem 0.22rem !important;
+    font-size: 0.65rem !important;
+  }
 }
