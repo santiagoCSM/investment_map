@@ -17,7 +17,7 @@ interface DataPanelProps {
 // legend lives separately, fixed at the bottom of the screen, since it's
 // not something you'd ever want to drag around.
 export function DataPanel({ quotes, symbols, loading, error }: DataPanelProps) {
-  const { panelRef, position, onHandlePointerDown } = useDraggable('top-right')
+  const { panelRef, position, onHandlePointerDown } = useDraggable()
 
   const nameByTicker = useMemo(() => {
     const m = new Map<string, string>()
@@ -33,7 +33,7 @@ export function DataPanel({ quotes, symbols, loading, error }: DataPanelProps) {
     <aside
       ref={panelRef as React.RefObject<HTMLElement>}
       className="data-panel"
-      style={position ? { left: position.x, top: position.y } : { visibility: 'hidden' }}
+      style={position ? { left: position.x, top: position.y, right: 'auto' } : undefined}
     >
       <header className="data-panel__header" onPointerDown={onHandlePointerDown}>
         <h1>Mapa de Inversiones</h1>

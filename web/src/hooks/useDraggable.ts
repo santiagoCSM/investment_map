@@ -16,21 +16,19 @@ interface UseDraggableResult {
 // whole panel, so text inside stays selectable/clickable). Uses pointer
 // capture rather than document-level listeners, so the drag keeps tracking
 // even if the cursor moves faster than the panel.
-export function useDraggable(initialCorner: 'top-right' | 'top-left' = 'top-right'): UseDraggableResult {
+//
+// `position` starts (and stays) null until the user's first drag — the
+// panel's default on-screen spot is plain CSS (e.g. `top: 20px; right:
+// 20px`), not something measured in JS on mount. An earlier version did
+// measure it on mount via getBoundingClientRect(), and that one-time
+// measurement raced with the browser's own initial layout pass often
+// enough to land the panel off-screen. Reading the rect inside
+// onHandlePointerDown instead is reliable because it only ever runs in
+// response to a real user gesture, well after layout has settled.
+export function useDraggable(): UseDraggableResult {
   const panelRef = useRef<HTMLElement | null>(null)
   const [position, setPosition] = useState<Position | null>(null)
   const dragOffset = useRef<{ dx: number; dy: number } | null>(null)
-
-  // Position starts null and gets set on mount once we can measure the
-  // panel — avoids hardcoding a width that has to stay in sync with CSS.
-  useEffect(() => {
-    const el = panelRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const margin = 20
-    const x = initialCorner === 'top-right' ? window.innerWidth - rect.width - margin : margin
-    setPosition({ x, y: margin })
-  }, [initialCorner])
 
   const clamp = useCallback((x: number, y: number) => {
     const el = panelRef.current
@@ -44,9 +42,12 @@ export function useDraggable(initialCorner: 'top-right' | 'top-left' = 'top-righ
 
   const onHandlePointerDown = useCallback(
     (e: ReactPointerEvent) => {
-      if (!position) return
+      const el = panelRef.current
+      if (!el) return
+      const current = position ?? el.getBoundingClientRect()
+      if (!position) setPosition({ x: current.x, y: current.y })
       ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
-      dragOffset.current = { dx: e.clientX - position.x, dy: e.clientY - position.y }
+      dragOffset.current = { dx: e.clientX - current.x, dy: e.clientY - current.y }
     },
     [position],
   )
