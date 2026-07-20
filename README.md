@@ -11,6 +11,8 @@ consuming its REST API. It is not intended to be monetized or operated as a
 product — the priority throughout has been clean, well-architected,
 testable code over feature breadth.
 
+**Live demo:** [investmentmap-production.up.railway.app](https://investmentmap-production.up.railway.app)
+
 ![World map choropleth showing live market status, colored by daily percentage change](docs/screenshot.png)
 
 ## Table of contents
