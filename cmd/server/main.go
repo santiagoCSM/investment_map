@@ -10,6 +10,14 @@ import (
 	"syscall"
 	"time"
 
+	// Embeds the IANA timezone database into the binary. Without it,
+	// time.LoadLocation fails on any minimal container image that doesn't
+	// ship /usr/share/zoneinfo (e.g. plain alpine) — ComputeMarketState
+	// silently falls back to MarketStateUnknown for every symbol instead
+	// of erroring loudly, which is exactly how this got missed locally
+	// (macOS provides its own system-wide zoneinfo, masking the gap).
+	_ "time/tzdata"
+
 	"investment-map/config"
 	inboundhttp "investment-map/internal/adapters/inbound/http"
 	"investment-map/internal/adapters/outbound/mongo"
