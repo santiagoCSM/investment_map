@@ -1,0 +1,39 @@
+# Investment Map · solo planes de cómputo gratuitos en Render.
+# MongoDB Atlas se configura como secreto durante el primer despliegue.
+# No se almacenan credenciales en Git.
+previews:
+  generation: off
+
+services:
+  - type: web
+    name: investment-map-web
+    runtime: docker
+    plan: free
+    region: oregon
+    repo: https://github.com/santiagoCSM/investment_map
+    branch: main
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: investment-map-cache
+          property: connectionString
+      - key: MONGO_URI
+        sync: false
+      - key: MONGO_DATABASE
+        value: investment_map
+      - key: REFRESH_INTERVAL
+        value: 5m
+      - key: HISTORY_REFRESH_INTERVAL
+        value: 24h
+
+  - type: keyvalue
+    name: investment-map-cache
+    plan: free
+    region: oregon
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+    persistenceMode: off
