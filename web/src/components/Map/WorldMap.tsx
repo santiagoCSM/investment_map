@@ -66,7 +66,7 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
     return m
   }, [symbols])
 
-  // choropleth is driven by the index, matching the MVP's "index status"
+  // Country colors reflect the headline index, not other asset classes.
   const quoteByCountry = useMemo(() => {
     const m = new Map<string, Quote>()
     for (const q of quotes) {
