@@ -43,22 +43,12 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
   const [size, setSize] = useState<Size>({ width: 0, height: 0 })
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
 
-  // Survives redraws (new quotes, resize) so the user's zoom/pan position
-  // isn't reset every time the choropleth re-renders.
   const zoomTransformRef = useRef<d3.ZoomTransform | null>(null)
-  // The zoom behavior + its own <svg> selection, kept around so the Reset
-  // View button can animate back to center without re-deriving either.
   const zoomBehaviorRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null)
 
-  // Event handlers are attached once (see the geometry effect below) and
-  // must not go stale as quotes keep refreshing — they read through these
-  // refs instead of closing over state directly.
   const quoteByCountryRef = useRef<Map<string, Quote>>(new Map())
   const symbolByTickerRef = useRef<Map<string, Symbol>>(new Map())
 
-  // The map is full-bleed now (the whole viewport is its container), so
-  // unlike a fixed viewBox it needs to know the container's actual pixel
-  // size to fit the projection for whatever screen shape it's given.
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
@@ -70,18 +60,13 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
     return () => observer.disconnect()
   }, [])
 
-  // ticker -> Symbol, for joining quotes with country/assetClass metadata
-  // that Quote itself doesn't carry.
   const symbolByTicker = useMemo(() => {
     const m = new Map<string, Symbol>()
     for (const s of symbols) m.set(s.ticker, s)
     return m
   }, [symbols])
 
-  // countryCode -> the quote for that country's headline index. Other
-  // asset classes (ETFs, ADRs, forex) exist per country too, but the
   // choropleth is driven by the index, matching the MVP's "index status"
-  // goal — the others feed the capital-flow layer later, not this map.
   const quoteByCountry = useMemo(() => {
     const m = new Map<string, Quote>()
     for (const q of quotes) {
@@ -115,8 +100,6 @@ export function WorldMap({ quotes, symbols }: WorldMapProps) {
     return quote.marketState === 'open' ? 1 : 0.6
   }
 
-  // Geometry pass: builds the projection and one <path> per country. Only
-  // reruns when the topology loads or the container is resized — country
   // fill/opacity/selection are updated in place by the effect below so
   // existing DOM nodes can animate between states instead of popping in
   // fresh on every quote refresh.
